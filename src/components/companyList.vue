@@ -36,7 +36,7 @@
           </el-col>
           <!-- table  -->
           <template>
-            <el-table :data="custs" stripe highlight-current-row 
+            <el-table :data="custs" stripe highlight-current-row
               :row-style="{cursor: 'pointer'}" style="width: 100%;"
               @row-click="getDeviceInfo" ref="companyTable">
               <el-table-column type="index" :label="$t('CompanyManage.NO')" width="65" align="center">
@@ -163,56 +163,106 @@
                     location: 'yangwxTest',
                 }],
 
-                devices: [{
+                // machineCode: '',
+                // boundBoxCode: '',
+
+                devices: [
+                {
                     machineCode: 'MC1',
                     boundBoxCode: 'mbox_1743ec',
                 },{
                     machineCode: 'MC2',
                     boundBoxCode: 'mbox_27ce2c',
-                },{
-                    machineCode: 'MC3',
-                    boundBoxCode: 'mbox_4a9911',
-                },{
-                    machineCode: 'MC4',
-                    boundBoxCode: 'mbox_4a9912',
-                },{
-                    machineCode: 'MC5',
-                    boundBoxCode: 'mbox_4a9913',
-                },{
-                    machineCode: 'MC6',
-                    boundBoxCode: 'mbox_4a9914',
-                }]
+                },
+                //{
+                //     machineCode: 'MC3',
+                //     boundBoxCode: 'mbox_4a9911',
+                // },{
+                //     machineCode: 'MC4',
+                //     boundBoxCode: 'mbox_4a9912',
+                // },{
+                //     machineCode: 'MC5',
+                //     boundBoxCode: 'mbox_4a9913',
+                // },{
+                //     machineCode: 'MC6',
+                //     boundBoxCode: 'mbox_4a9914',
+                // },
+                ],
 
             }
 
         },
         methods: {
             getDeviceInfo: function (row, event, column) {
+
                 // let para = row.id;
                 // this.currentCompany = row;
+              for(var i = 0; i < 4; i++) {
+                  if(this.custs[i].contact == 'Auty04')
+                  {
+                    this.devices[0].machineCode = 'MC1';
+                    this.devices[0].boundBoxCode = 'zhaobuchu';
+                    this.devices[1].machineCode = 'MC2';
+                    this.devices[1].boundBoxCode = 'mbox_27ce2c';
+                  }
+                  // if(this.custs[i].contact == 'qwe qew')
+                  // {
+                  //   this.devices[0].machineCode = 'MC1';
+                  //   this.devices[0].boundBoxCode = 'zhaobuchu';
+                  //   this.devices[1].machineCode = 'MC2';
+                  //   this.devices[1].boundBoxCode = 'mbox_27ce2c';
+                  //   // this.devices[2].machineCode = 'MC3';
+                  //   // this.devices[2].boundBoxCode = 'mbox_4a9911';
+                  //   // this.devices[3].machineCode = 'MC4';
+                  //   // this.devices[3].boundBoxCode = 'mbox_419912';
+                  // }
+                  // if(this.custs[i].contact == '2653917242')
+                  // {
+                  //   this.devices[0].machineCode = 'MC1';
+                  //   this.devices[0].boundBoxCode = 'mbox_1743ec';
+                  //   this.devices[1].machineCode = 'MC2';
+                  //   this.devices[1].boundBoxCode = 'mbox_27ce2c';
+                  //   // this.devices[2].machineCode = 'MC3';
+                  //   // this.devices[2].boundBoxCode = 'mbox_4a9911';
+                  //   // this.devices[3].machineCode = 'MC4';
+                  //   // this.devices[3].boundBoxCode = 'mbox_4a9912';
+                  //   // this.devices[4].machineCode = 'MC5';
+                  //   // this.devices[4].boundBoxCode = 'mbox_4a9913';
+                  //   // this.devices[5].machineCode = 'MC6';
+                  //   // this.devices[5].boundBoxCode = 'mbox_4a9914';
+                  // }
+                  // if (this.custs[i].contact =='3662102')
+                  // {
+                  //   this.devices[0].machineCode = 'MC1';
+                  //   this.devices[0].boundBoxCode = 'mbox_1743ec';
+                  //   this.devices[1].machineCode = 'MC2';
+                  //   this.devices[1].boundBoxCode = 'mbox_27ce2c';
+                  // }
 
-                let a=1;
-                // let b=this.devices.length;   
-                let b=4;
-                let num=Math.floor(Math.random()*eval(b)+eval(a))-1;
+              }
+
+                // let a=1;
+                // // let b=this.devices.length;
+                // let b=4;
+                // let num=Math.floor(Math.random()*eval(b)+eval(a))-1;
 
                 // for(var i = 0; i < this.devices.length; i++) {
                 //     this.devices[i].machineCode = this.devices[num].machineCode;
                 //     this.devices[i].boundBoxCode = this.devices[num].boundBoxCode;
                 // }
 
-                this.devices[0].machineCode = this.devices[num].machineCode;
-                this.devices[0].boundBoxCode = this.devices[num].boundBoxCode;
-                this.devices[1].machineCode = this.devices[num+1].machineCode;
-                this.devices[1].boundBoxCode = this.devices[num+1].boundBoxCode;
-                this.devices[2].machineCode = this.devices[num].machineCode;
-                this.devices[2].boundBoxCode = this.devices[num].boundBoxCode;
-                this.devices[3].machineCode = ' ';
-                this.devices[3].boundBoxCode = ' ';
+                // this.devices[0].machineCode = this.devices[num].machineCode;
+                // this.devices[0].boundBoxCode = this.devices[num].boundBoxCode;
+                // this.devices[1].machineCode = this.devices[num+1].machineCode;
+                // this.devices[1].boundBoxCode = this.devices[num+1].boundBoxCode;
+                // this.devices[2].machineCode = this.devices[num].machineCode;
+                // this.devices[2].boundBoxCode = this.devices[num].boundBoxCode;
+                // this.devices[3].machineCode = ' ';
+                // this.devices[3].boundBoxCode = ' ';
 
 
- 
-                
+
+
 
                 // this.$api.companyManageGetBoundMachines(para).then((data) => {
                 //     this.devices = data;
@@ -225,7 +275,7 @@
             handleCurrentChange(val) {
                 this.page = val;
                 // this.getCustData();
-            },    
+            },
 
         },
         mounted() {
