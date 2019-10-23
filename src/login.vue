@@ -7,6 +7,8 @@
             <p>密码: <input type="password" v-model = "pwd" id="pwd" required="required" maxlength="11" /> </p> <br>
             <input type="button" value="登录" @click = 'loginHandle'/>
         </form> -->
+		<router-link :to="{ path: 'charts' }" class="zz">图表</router-link>
+		<router-link :to="{ path: 'companyList' }" class="zz">公司</router-link>
             <form class="login-form" method="post" action="#" >
                 <div class="nav">
                   <router-link :to="{ path: 'login' }" class="zz">用户登录</router-link>
