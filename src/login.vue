@@ -9,6 +9,8 @@
         </form> -->
 		<router-link :to="{ path: 'charts' }" class="zz">图表</router-link>
 		<router-link :to="{ path: 'companyList' }" class="zz">公司</router-link>
+    <router-link :to="{ path: 'tree1' }" class="zz">tree1</router-link>
+    <router-link :to="{ path: 'ztree' }" class="zz">巨树</router-link>
             <form class="login-form" method="post" action="#" >
                 <div class="nav">
                   <router-link :to="{ path: 'login' }" class="zz">用户登录</router-link>

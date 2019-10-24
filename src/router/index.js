@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import machineList from '@/components/machineList'
 import admin from '@/components/admin'
+import tree1 from '@/components/tree1'
+import ztree from '@/components/ztree'
 import charts from '@/components/charts'
 import companyList from '@/components/companyList'
 import main from '@/main.vue'
@@ -44,6 +46,15 @@ export default new Router({
           path: '/companyList',
           name: '/companyList',
           component: companyList,
+        },
+        {
+          path: '/tree1',
+          name: '/tree1',
+          component: tree1,
+        },{
+          path: '/ztree',
+          name: '/ztree',
+          component: ztree,
         }
       ]
     },
