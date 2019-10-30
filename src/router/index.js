@@ -6,6 +6,7 @@ import tree1 from '@/components/tree1'
 import ztree from '@/components/ztree'
 import charts from '@/components/charts'
 import companyList from '@/components/companyList'
+import resource  from '@/components/resource'
 import main from '@/main.vue'
 import login from '@/login'
 import { appendFile } from 'fs'
@@ -55,6 +56,10 @@ export default new Router({
           path: '/ztree',
           name: '/ztree',
           component: ztree,
+        },{
+          path: '/resource',
+          name: '/resource',
+          component: resource
         }
       ]
     },

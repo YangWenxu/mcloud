@@ -65,7 +65,12 @@
       </div>
       <div class="layer2">
           <div style="text-align: left; font-size: 20px; font-weight: bold; background: #193166" >
-            等级对应
+            <div style="float:left; margin-left: 0;">等级对应</div>
+            <div style="float:right;margin-right: 30px;">
+                <el-button type="primary" @click="addForm">
+                添加
+                </el-button>
+            </div>
           </div>
 
           <div style="background: #152545">
@@ -74,7 +79,7 @@
                     <template slot-scope="props">
                         <!-- slot-scope="props" -->
                         <el-table :data="props.row.form"  row-key="id"  type="selection" border ref="dataTable" :cell-class-name="rowClass">
-                            <el-table-column  label="目标告警等级" mix-width="40">
+                            <el-table-column  label="等级名称" mix-width="40">
                                 <template slot-scope="innerProps">
                                     <span>{{ innerProps.row.level1 }}</span>
                                 </template>
@@ -84,20 +89,21 @@
                                     <span>{{ innerProps.row.level2 }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column  label="告警颜色" mix-width="40">
+                            <el-table-column  label="告警颜色" mix-width="40" >
                                 <template slot-scope="innerProps">
-                                    <span :style="{background: innerProps.row.level3 }">zbc</span>
+                                    <span :style="{background: innerProps.row.level3}">.............</span>
 
                                 </template>
                             </el-table-column>
-                            <el-table-column  label="源告警等级" mix-width="40">
+                            <!-- <el-table-column  label="源告警等级" mix-width="40">
                                 <template slot-scope="innerProps">
                                     <span>{{ innerProps.row.level4 }}</span>
                                </template>
-                            </el-table-column>
+                            </el-table-column> -->
                         </el-table>
                     </template>
               </el-table-column>
+              <el-table-column type="index" width="50"></el-table-column>
               <el-table-column prop="data1" label="企业名称" mix-width="120">
               </el-table-column>
               <el-table-column prop="data2" label="服务名称" mix-width="120">
@@ -115,9 +121,56 @@
                         {{ props.row.data7 }}
                     </template>
               </el-table-column>
-              <el-table-column prop="data8" label="操作" mix-width="120">
+              <el-table-column label="操作" mix-width="120">
+                    <template slot-scope="scope">
+                        <el-button
+                        size="mini"
+                        @click="handleEdit(scope.$index, scope.row)"
+                        >编辑</el-button>
+                        <el-button
+                        size="mini"
+                        type="danger"
+                        >删除</el-button>
+                    </template>
               </el-table-column>
             </el-table>
+            <el-dialog class="dia400" title="添加和修改" :visible="formVisible" :close-on-click-modal="false" @close="handleCancel">
+                <el-form :model="formData" label-width="110px" ref="formData"> 
+                        <!-- style="background: #152545; color: #152545" -->
+                    <el-form-item label="规则名称：" prop="name">
+                        <el-input v-model="formData.name" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="操作用户：" >
+                        系统管理员
+                    </el-form-item>
+                    <el-form-item label="企业名称：" prop="company">
+                        <el-input v-model="formData.company"></el-input>
+                    </el-form-item>
+                    <el-form-item label="服务名称："  prop="service">
+                        <el-input v-model="formData.service"></el-input>
+                    </el-form-item>
+                    <el-form-item label="告警级别设置：" prop="warning">
+                        <el-select v-model="formData.warning" filterable @change="selectTrigger()"> 
+                            <el-option v-for="(item, index) in formList" :key="index" :label="item.level1" :value="index" > {{ item.level1 }} </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="等级名称颜色"></el-form-item>
+                    
+                    <div v-for="(item, index) in labelList" :key="index" :value="index" >
+                        <el-form-item :label="item.level1">
+                            <el-input v-model="item.level2"  style="width:140px;" ></el-input>
+                            <el-color-picker v-model="item.level3"></el-color-picker>
+                        </el-form-item>
+                    </div>
+
+                </el-form>
+                
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click.native="handleCancel">{{$t('System.Cancel')}}</el-button>
+                    <el-button @click.native="handleCommit" type="primary">{{$t('System.Commit')}}</el-button>
+                    <el-button @click.native="handleModify" type="primary">修改</el-button>
+                </div>  
+            </el-dialog>
           </div>
       </div>
       <div class="footer">
@@ -139,6 +192,7 @@
 
 
 <script>
+var _index;
 import tree from "vue-giant-tree"
 export default {
     components: {
@@ -146,23 +200,51 @@ export default {
 	},
     data () {
         return {
+            formList: [
+                  {level1: '一级告警', level2: '严重告警', level3: '#DB001B', level4: '一级告警，二级告警'},
+                  {level1: '二级告警', level2: '中度告警', level3: '#FF8400', level4: '三级告警，四级告警'},
+                  {level1: '三级告警', level2: '次级告警', level3: '#E6D500', level4: '五级告警'},
+                  {level1: '四级告警', level2: '3990djdkf', level3: '#C001E7', level4: '四级告警，五级告警'},
+                  {level1: '五级告警', level2: '3990djdkf', level3: '#FF5695', level4: '八级告警'},
+                  {level1: '六级告警', level2: '3990djdkf', level3: '#00B1FF', level4: '七级告警，八级告警'},
+                  {level1: '七级告警', level2: '3990djdkf', level3: '#78E2FA', level4: '九级告警，十级告警'},
+                  {level1: '八级告警', level2: '3990djdkf', level3: '#7ED321', level4: '六级告警，七级告警'},
+            ],
+            sbList: [
+                  {level1: '一级告警', level2: '严重告警', level3: '#DB001B', level4: '一级告警，二级告警'},
+                  {level1: '二级告警', level2: '中度告警', level3: '#FF8400', level4: '三级告警，四级告警'},
+                  {level1: '三级告警', level2: '次级告警', level3: '#E6D500', level4: '五级告警'},
+                  {level1: '四级告警', level2: '3990djdkf', level3: '#C001E7', level4: '四级告警，五级告警'},
+                  {level1: '五级告警', level2: '3990djdkf', level3: '#FF5695', level4: '八级告警'},
+                  {level1: '六级告警', level2: '3990djdkf', level3: '#00B1FF', level4: '七级告警，八级告警'},
+                  {level1: '七级告警', level2: '3990djdkf', level3: '#78E2FA', level4: '九级告警，十级告警'},
+                  {level1: '八级告警', level2: '3990djdkf', level3: '#7ED321', level4: '六级告警，七级告警'},
+            ],
+            labelList: [],
+            formVisible: false,
             page: 5,
             pageSize: 10,
             total: 50,
+            formData: [],
             tableData: [
             {
               data1: '义益钛迪',
-              data2: '智慧用电',
+              data2: '智慧用水',
               data3: '开关电梯',
               data4: 'AD-2U220S48100',
               data5: '手动',
               data6: '系统管理',
               data7: '2018-06-28',
-              data8: '查看',
+            //   data8: '',
               form: [
-                  {level1: '一级告警', level2: '严重告警', level3: 'red', level4: '一级告警，二级告警'},
-                  {level1: '二级告警', level2: '中度告警', level3: 'yellow', level4: '三级告警，四级告警'},
-                  {level1: '三级告警', level2: '次级告警', level3: 'blue', level4: '五级告警'},
+                  {level1: '一级告警', level2: '严重告警', level3: '#DB001B', level4: '一级告警，二级告警'},
+                  {level1: '二级告警', level2: '中度告警', level3: '#FF8400', level4: '三级告警，四级告警'},
+                  {level1: '三级告警', level2: '次级告警', level3: '#E6D500', level4: '五级告警'},
+                  {level1: '四级告警', level2: '3990djdkf', level3: '#C001E7', level4: '四级告警，五级告警'},
+                  {level1: '五级告警', level2: '3990djdkf', level3: '#FF5695', level4: '八级告警'},
+                  {level1: '六级告警', level2: '3990djdkf', level3: '#00B1FF', level4: '七级告警，八级告警'},
+                  {level1: '七级告警', level2: '3990djdkf', level3: '#78E2FA', level4: '九级告警，十级告警'},
+                  {level1: '八级告警', level2: '3990djdkf', level3: '#7ED321', level4: '六级告警，七级告警'},
                 ]
             },{
               data1: '阿里巴巴',
@@ -174,9 +256,9 @@ export default {
               data7: '2018-05-28',
               data8: '查看',
               form: [
-                  {level1: '四级告警', level2: '严重告警', level3: 'blue', level4: '四级告警，五级告警'},
-                  {level1: '五级告警', level2: '中度告警', level3: 'green', level4: '六级告警，七级告警'},
-                  {level1: '六级告警', level2: '次级告警', level3: 'black', level4: '八级告警'},
+                  {level1: '一级告警', level2: '严重告警', level3: '#DB001B', level4: '一级告警，二级告警'},
+                  {level1: '二级告警', level2: '中度告警', level3: '#FF8400', level4: '三级告警，四级告警'},
+                  {level1: '三级告警', level2: '次级告警', level3: '#E6D500', level4: '五级告警'},
                 ]
             },{
               data1: '百度可乐',
@@ -188,9 +270,9 @@ export default {
               data7: '2018-04-28',
               data8: '查看',
               form: [
-                  {level1: '七级告警', level2: '严重告警', level3: 'yellow ', level4: '七级告警，八级告警'},
-                  {level1: '八级告警', level2: '中度告警', level3: 'blue', level4: '九级告警，十级告警'},
-                  {level1: '九级告警', level2: '次级告警', level3: 'red', level4: '五级告警'},
+                  {level1: '一级告警', level2: '严重告警', level3: '#DB001B', level4: '一级告警，二级告警'},
+                  {level1: '二级告警', level2: '中度告警', level3: '#FF8400', level4: '三级告警，四级告警'},
+                  {level1: '三级告警', level2: '次级告警', level3: '#E6D500', level4: '五级告警'},
               ]
             },{
               data1: '华为宝典',
@@ -202,9 +284,9 @@ export default {
               data7: '2018-04-28',
               data8: '查看',
               form: [
-                  {level1: '九级告警', level2: '严重告警', level3: 'green', level4: '五级告警，七级告警'},
-                  {level1: '六级告警', level2: '中度告警', level3: 'purple', level4: '十级告警，八级告警'},
-                  {level1: '四级告警', level2: '次级告警', level3: 'blue', level4: '白活不出'},
+                  {level1: '一级告警', level2: '严重告警', level3: '#DB001B', level4: '一级告警，二级告警'},
+                  {level1: '二级告警', level2: '中度告警', level3: '#FF8400', level4: '三级告警，四级告警'},
+                  {level1: '三级告警', level2: '次级告警', level3: '#E6D500', level4: '五级告警'},
               ]
             }
             ],
@@ -283,11 +365,75 @@ export default {
         }
     },
     methods: {
-        getData() {
-            for(let i=0; i<this.tableData.length; i++)
-            {
-              console.log(this.tableData[i].data7);
+
+        selectTrigger(val) {
+            this.labelList.length = this.formData.warning+1;
+            for(let i = 0; i<this.labelList.length; i++) {
+                // this.labelList = JSON.parse(JSON.stringify(this.sbList));
+                // this.$set(this.labelList, i ,this.sbList[i]);
+                this.$set(this.labelList, i ,JSON.parse(JSON.stringify(this.sbList[i])));
             }
+
+        },
+
+        addForm() {
+            this.formVisible = true;
+            this.labelList = [];        
+            
+            this.formData = {
+                company: '',
+                service: '',
+            }
+            // for(var prop in this.sbList) {
+            //     if(this.sbList.hasOwnProperty(prop))
+            //         this.labelList[prop] = this.sbList[prop];
+            // }
+
+            // for(let j=0;j<this.sbList.length;j++) {
+            //     this.labelList.push(this.sbList[j]);
+            // }
+
+            this.labelList = JSON.parse(JSON.stringify(this.sbList));
+            // this.labelList = Object.assign([], this.sbList);
+        },
+
+        handleEdit (index, row) {
+            this.formVisible = true;
+            this.formData = {
+                company: '',
+                service: '',
+            }
+            // this.labelList = this.tableData[index].form;
+            this.labelList = JSON.parse(JSON.stringify(this.tableData[index].form));
+            // console.log(index); 
+            _index = index;
+        },
+
+        handleModify() {
+            this.formVisible =false;
+            let z = _index;
+            console.log(z);
+            this.tableData[z].data1 = this.formData.company;
+            this.tableData[z].data2 = this.formData.service;
+            // this.tableData[z].form = this.labelList;
+            this.tableData[z].form = JSON.parse(JSON.stringify(this.labelList));
+            
+            // this.tableData[z] = param;
+        },
+
+        handleCommit() {
+            this.tableData.push({
+                data1: this.formData.company,
+                data2: this.formData.service,
+                form: this.labelList,
+            });
+
+            this.formVisible = false;
+            // storage.set('url', this.url);
+        },
+
+        handleCancel() { 
+            this.formVisible = false;
         },
 
         rowClass ({ row, column, rowIndex, columnIndex }) {
@@ -298,17 +444,7 @@ export default {
             }
         },
         tableRowStyle({ row, column, rowIndex, columnIndex }) {
-
-            if (rowIndex === 0 && columnIndex === 3) {
-                return 'background-color: red';
-            } else if (rowIndex === 0 && columnIndex === 3) {
-                return 'background-color: blue';
-            } else if (rowIndex === 0 && columnIndex === 3) {
-                return 'background-color: yellow';
-            } else {
-                return 'background-color: #152545';
-            }
-            // return 'background-color: #152545'
+            return 'background-color: #152545'
         },
         tableHeaderColor({ row, column, rowIndex, columnIndex }) {
             if (rowIndex === 0 ) {
@@ -317,7 +453,7 @@ export default {
         },
     },
     mounted () {
-        this.getData();
+        // this.getData();
     }
 }
 </script>
@@ -327,7 +463,6 @@ export default {
         margin: 0;
         padding: 0;
     }
-
     #main {
         width: 1200px;
         height: 800px;
@@ -343,36 +478,30 @@ export default {
         margin-top: -400px;
         margin-left: -600px;
     }
-
     .aside {
         float: left;
         width: 19%;
         height: 800px;
         background: #223254;
     }
-
     .container {
         float: right;
         width: 79%;
         height: 800px;
         background: #152545;
     }
-
     .layer1 {
         background: #152545;
         position: absolute;
     }
-
     .layer2 {
         margin-top: 150px;
         background-color: red;
     }
-
     .place1 {
         margin-left: 30px;
         margin-top: 10px;
     }
-
     .button1 {
         float: left;
         margin-left: 30px;
@@ -380,14 +509,11 @@ export default {
         background: #00B1FF;
         width: 50px;
     }
-
     .footer {
         right: 10px;
         bottom: 10px;
         position: absolute;
     }
-
-
     .rgb196{
     background: rgb(196,196,196);
     }
@@ -397,6 +523,4 @@ export default {
     .bacColorf4984e{
     background: #f4984e;
     }
-
-
 </style>
