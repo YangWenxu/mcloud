@@ -514,13 +514,5 @@ export default {
         bottom: 10px;
         position: absolute;
     }
-    .rgb196{
-    background: rgb(196,196,196);
-    }
-    .bacColor317eb0{
-    background: #317eb0;
-    }
-    .bacColorf4984e{
-    background: #f4984e;
-    }
+
 </style>
