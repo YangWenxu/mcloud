@@ -2,17 +2,15 @@
   <div id="main">
     <div class="aside">
         <tree :nodes="data" :setting="setting" ref="sb" @onClick="onClick"/>
-        <!-- <div class="custom-tree-node" slot-scope="{ node, data }"> -->
-            <!-- <el-button type="text" size="mini" @click="append(data)">Append</el-button> -->
-        <!-- </div> -->
     </div>
     <div class="container">
         <div class="header" style="text-align: left; font-size: 20px; font-weight: bold; background: #193166" >
             <div style="float:left; margin-left: 0;">详细信息</div>
             <div style="float:right;margin-right: 30px;">
-                <el-button type="primary">删除</el-button>
+                <el-button type="primary" @click="expand">展开树</el-button>
                 <el-button type="primary" @click="resetForm">重置</el-button>
-                <el-button type="primary" @click="saveForm">保存</el-button>
+                <el-button type="primary" @click="addForm">添加</el-button>
+                <el-button type="primary" @click="modifyForm">修改</el-button>
             </div>
 
         </div>
@@ -236,13 +234,11 @@ export default {
                         name: 'label'
                     }
                 },
-
                // callback: {    //回调函数，实现展开功能
                //      beforeAsync: beforeAsync,
                //      onAsyncSuccess: onAsyncSuccess,
                //      onAsyncError: onAsyncError
                //  },
-
                 view: {
                     showIcon: false,
                     // addHoverDom: this.addHoverDom,
@@ -293,7 +289,6 @@ export default {
           if(this.formList.length > 1) {
               this.formList.splice(index, 1);
           }
-
         },
         handleDelete2(index) {
           if(this.formList2.length > 1) {
@@ -312,35 +307,46 @@ export default {
             this.$set(this.formList, 0, JSON.parse(JSON.stringify(this.sbList[0])));
             this.formList2.length = 1;
             this.$set(this.formList2, 0, JSON.parse(JSON.stringify(this.sbList[0])));
-
             this.formList3.length = 1;
             this.$set(this.formList3, 0, JSON.parse(JSON.stringify(this.sbList[0])));
         },
-        saveForm() {
-
+        addForm() {
+            var treeObj = this.$refs.sb.ztreeObj;
+            let p = treeObj.getNodesByFilter(v => v.level ===2)[0];
+            var newNode = { id:132123, label: this.form1.cName, aa: this.formList, bb: this.formList2, cc: this.formList3};
+            newNode = treeObj.addNodes(p, newNode);
+        },
+        modifyForm() {
+          var treeObj = this.$refs.sb.ztreeObj;
+          var sNodes = treeObj.getSelectedNodes();
+          this.formList = sNodes[0].aa;
+          this.formList2 = sNodes[0].bb;
+          this.formList3 = sNodes[0].cc;
+        },
+        expand() {
             var treeObj = this.$refs.sb.ztreeObj;
             treeObj.expandAll(true);
-
-            let p = treeObj.getNodesByFilter(v => v.level ===2)[0];
-
-            var newNode = { id:1111231, label: this.form1.cName };
-
-            newNode = treeObj.addNodes(p, newNode);
-
-            // console.log(this.formList);
-            // console.log(this.formList2);
-            // console.log(this.formList3);
         },
-        // expand() {
-        //   var treeObj = this.$refs.sb.ztreeObj;
-        //   treeObj.expandAll(true);
-        // },
         onClick: function(evt, treeId, treeNode) {
-          // 点击事件
-          // console.log(treeNode.label);
           this.form1.cName = treeNode.label;
+          this.getData();
+        //   if(sNodes.length > 0) {
+        //       var node = sNodes[0].getIndex();
+        //   }
+        //   console.log(node);
+
         },
+        getData() {
+          var treeObj = this.$refs.sb.ztreeObj;
+          var sNodes = treeObj.getSelectedNodes();
+          this.formList = JSON.parse(JSON.stringify(sNodes[0].aa));
+          this.formList2 = JSON.parse(JSON.stringify(sNodes[0].bb));
+          this.formList3 = JSON.parse(JSON.stringify(sNodes[0].cc));
+        }
     },
+    mounted() {
+      // this.getData();
+    }
 }
 </script>
 
