@@ -319,6 +319,9 @@ export default {
         modifyForm() {
           var treeObj = this.$refs.sb.ztreeObj;
           var sNodes = treeObj.getSelectedNodes();
+          sNodes[0].aa=this.formList;
+          sNodes[0].bb = this.formList2;
+          sNodes[0].cc = this.formList3;
           this.formList = sNodes[0].aa;
           this.formList2 = sNodes[0].bb;
           this.formList3 = sNodes[0].cc;
